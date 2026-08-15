@@ -143,7 +143,7 @@ export default function About() {
                 "
               >
                 <Image
-                  src="/main1.png"
+                  src="/about_img.png"
                   alt="Mit Ramavat"
                   fill
                   sizes="(max-width: 640px) 310px, (max-width: 1024px) 460px, 540px"

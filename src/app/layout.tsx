@@ -64,6 +64,9 @@ export const metadata: Metadata = {
       "AI Engineer, Machine Learning Engineer, and Full Stack Developer building intelligent applications and modern web experiences.",
     images: ["/profile.png"],
   },
+  verification: {
+    google: "bY62PxN7Mis0EezurpyY8xC46ZDBIN_D01Yq_sSe2SI",
+  },
 };
 
 const jsonLd = {

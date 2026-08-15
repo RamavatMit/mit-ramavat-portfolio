@@ -160,7 +160,7 @@ export default function Hero() {
             {/* Main Floating Portrait Wrapper */}
             <div className="float-animation relative w-[290px] sm:w-[400px] lg:w-[480px] h-[360px] sm:h-[500px] lg:h-[580px] flex justify-center items-center">
               <Image
-                src="/profile.png"
+                src="/hero_img.png"
                 alt="Mit Ramavat"
                 fill
                 priority
