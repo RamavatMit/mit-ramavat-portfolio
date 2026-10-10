@@ -5,195 +5,102 @@ import {
   SiFastapi,
   SiGit,
   SiTensorflow,
+  SiPytorch,
+  SiScikitlearn,
+  SiPandas,
+  SiNumpy,
+  SiOpencv,
   SiGithub,
   SiTypescript,
   SiTailwindcss,
+  SiDjango,
+  SiDocker,
+  SiStreamlit,
+  SiPostgresql,
+  SiGooglegemini,
 } from "react-icons/si";
-import { Brain } from "lucide-react";
-import { IconType } from "react-icons";
-import { LucideIcon } from "lucide-react";
+import type { IconType } from "react-icons";
 
 export type Skill = {
   name: string;
-  icon: IconType | LucideIcon;
-  color: string;
-  description: string;
-  category?: string;
+  icon?: IconType;
 };
 
-export type SkillCategory = {
+export type SkillGroup = {
   id: string;
+  index: string;
   title: string;
-  description: string;
+  summary: string;
   skills: Skill[];
 };
 
-export const skills: Skill[] = [
+export const skillGroups: SkillGroup[] = [
   {
-    name: "Python",
-    icon: SiPython,
-    color: "#3776AB",
-    description: "Building AI systems and backend applications.",
-    category: "AI & Backend",
-  },
-  {
-    name: "React",
-    icon: SiReact,
-    color: "#61DAFB",
-    description: "Creating modern interactive user interfaces.",
-    category: "Frontend",
-  },
-  {
-    name: "Next.js",
-    icon: SiNextdotjs,
-    color: "#FFFFFF",
-    description: "Building production-ready full stack applications.",
-    category: "Frontend",
-  },
-  {
-    name: "FastAPI",
-    icon: SiFastapi,
-    color: "#009688",
-    description: "Developing scalable APIs and backend services.",
-    category: "Backend",
-  },
-  {
-    name: "Machine Learning",
-    icon: Brain,
-    color: "#EAB308",
-    description: "Developing intelligent algorithms and predictive models.",
-    category: "AI & Machine Learning",
-  },
-  {
-    name: "TensorFlow",
-    icon: SiTensorflow,
-    color: "#FF6F00",
-    description: "Deep learning and neural network development.",
-    category: "AI & Machine Learning",
-  },
-  {
-    name: "Git",
-    icon: SiGit,
-    color: "#F05032",
-    description: "Version control and collaboration.",
-    category: "Tools",
-  },
-  {
-    name: "GitHub",
-    icon: SiGithub,
-    color: "#FFFFFF",
-    description: "Code hosting and project management.",
-    category: "Tools",
-  },
-  {
-    name: "TypeScript",
-    icon: SiTypescript,
-    color: "#3178C6",
-    description: "Type-safe JavaScript for scalable web applications.",
-    category: "Frontend",
-  },
-  {
-    name: "Tailwind CSS",
-    icon: SiTailwindcss,
-    color: "#06B6D4",
-    description: "Utility-first CSS framework for modern responsive design.",
-    category: "Frontend",
-  },
-];
-
-export const skillCategories: SkillCategory[] = [
-  {
-    id: "ai-ml",
-    title: "AI & Machine Learning",
-    description: "Intelligent models & neural architectures",
+    id: "ml",
+    index: "01",
+    title: "Machine Learning",
+    summary: "Modelling, evaluation and honest validation",
     skills: [
-      {
-        name: "Machine Learning",
-        icon: Brain,
-        color: "#EAB308",
-        description: "Intelligent algorithms & predictive models",
-      },
-      {
-        name: "TensorFlow",
-        icon: SiTensorflow,
-        color: "#FF6F00",
-        description: "Deep learning & neural networks",
-      },
-      {
-        name: "Python",
-        icon: SiPython,
-        color: "#3776AB",
-        description: "AI workflows & data processing",
-      },
+      { name: "Python", icon: SiPython },
+      { name: "Scikit-learn", icon: SiScikitlearn },
+      { name: "XGBoost" },
+      { name: "Pandas", icon: SiPandas },
+      { name: "NumPy", icon: SiNumpy },
+      { name: "Walk-forward CV" },
+    ],
+  },
+  {
+    id: "dl",
+    index: "02",
+    title: "Deep Learning & Vision",
+    summary: "Neural networks, perception and detection",
+    skills: [
+      { name: "TensorFlow", icon: SiTensorflow },
+      { name: "PyTorch", icon: SiPytorch },
+      { name: "OpenCV", icon: SiOpencv },
+      { name: "Object Detection" },
+      { name: "Speech / Wake-word" },
+    ],
+  },
+  {
+    id: "llm",
+    index: "03",
+    title: "LLMs & Agents",
+    summary: "Tool-using agents that act in the real world",
+    skills: [
+      { name: "Gemini", icon: SiGooglegemini },
+      { name: "Groq" },
+      { name: "Prompt Engineering" },
+      { name: "Tool Calling" },
+      { name: "Playwright" },
     ],
   },
   {
     id: "backend",
-    title: "Backend Architecture",
-    description: "Scalable APIs & server logic",
+    index: "04",
+    title: "Backend & MLOps",
+    summary: "APIs, data and shipping models",
     skills: [
-      {
-        name: "FastAPI",
-        icon: SiFastapi,
-        color: "#009688",
-        description: "Scalable REST APIs & async services",
-      },
-      {
-        name: "Python",
-        icon: SiPython,
-        color: "#3776AB",
-        description: "Backend microservices & business logic",
-      },
+      { name: "FastAPI", icon: SiFastapi },
+      { name: "Django", icon: SiDjango },
+      { name: "Docker", icon: SiDocker },
+      { name: "Streamlit", icon: SiStreamlit },
+      { name: "SQL", icon: SiPostgresql },
+      { name: "Data Scraping" },
     ],
   },
   {
     id: "frontend",
-    title: "Frontend Engineering",
-    description: "Modern interactive web applications",
+    index: "05",
+    title: "Interfaces",
+    summary: "Products people enjoy using",
     skills: [
-      {
-        name: "Next.js",
-        icon: SiNextdotjs,
-        color: "#FFFFFF",
-        description: "Production full-stack SSR applications",
-      },
-      {
-        name: "React",
-        icon: SiReact,
-        color: "#61DAFB",
-        description: "Interactive UI & state management",
-      },
-      {
-        name: "TypeScript",
-        icon: SiTypescript,
-        color: "#3178C6",
-        description: "Type-safe robust web applications",
-      },
-      {
-        name: "Tailwind CSS",
-        icon: SiTailwindcss,
-        color: "#06B6D4",
-        description: "Utility-first modern responsive styling",
-      },
-    ],
-  },
-  {
-    id: "tools",
-    title: "Dev Tools & Workflow",
-    description: "Version control & dev ecosystem",
-    skills: [
-      {
-        name: "Git",
-        icon: SiGit,
-        color: "#F05032",
-        description: "Version control & source management",
-      },
-      {
-        name: "GitHub",
-        icon: SiGithub,
-        color: "#FFFFFF",
-        description: "Code hosting & CI/CD collaboration",
-      },
+      { name: "Next.js", icon: SiNextdotjs },
+      { name: "React", icon: SiReact },
+      { name: "TypeScript", icon: SiTypescript },
+      { name: "Tailwind", icon: SiTailwindcss },
+      { name: "Git", icon: SiGit },
+      { name: "GitHub", icon: SiGithub },
     ],
   },
 ];

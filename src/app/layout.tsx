@@ -1,28 +1,46 @@
 import "./globals.css";
-import Providers from "@/components/Providers";
-import { Geist } from "next/font/google";
+import { Inter_Tight, Instrument_Serif, JetBrains_Mono, Newsreader } from "next/font/google";
 import { cn } from "@/lib/utils";
-import type { Metadata } from "next";
-import CursorTrail from "@/components/CursorTrail";
+import type { Metadata, Viewport } from "next";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
+const interTight = Inter_Tight({ subsets: ["latin"], variable: "--font-inter-tight", display: "swap" });
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-instrument-serif",
+  display: "swap",
+});
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono", display: "swap" });
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-newsreader",
+  display: "swap",
+});
+
+export const viewport: Viewport = {
+  themeColor: "#f3efe7",
+  colorScheme: "light",
+};
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://mit-ramavat.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://mit-ramavat-portfolio.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Mit Ramavat | AI Engineer & Full Stack Developer",
+    default: "Mit Ramavat | AI / ML Engineer",
     template: "%s | Mit Ramavat",
   },
   description:
-    "AI Engineer, Machine Learning Engineer, and Full Stack Developer building intelligent applications, machine learning solutions, and modern web experiences using FastAPI, Next.js, and React.",
+    "Mit Ramavat is an AI/ML engineer building voice agents, machine learning systems and intelligent products — from data pipelines and models to production APIs and interfaces.",
   keywords: [
     "Mit Ramavat",
     "AI Engineer",
     "Machine Learning Engineer",
-    "Full Stack Developer",
+    "AI Agents",
+    "LLM Engineer",
     "Python Developer",
     "FastAPI Developer",
     "Artificial Intelligence",
@@ -41,17 +59,17 @@ export const metadata: Metadata = {
     canonical: siteUrl,
   },
   openGraph: {
-    title: "Mit Ramavat | AI Engineer & Full Stack Developer",
+    title: "Mit Ramavat | AI / ML Engineer",
     description:
-      "AI Engineer, Machine Learning Engineer, and Full Stack Developer building intelligent applications, machine learning solutions, and modern web experiences.",
+      "AI/ML engineer building voice agents, machine learning systems and intelligent products.",
     url: siteUrl,
     siteName: "Mit Ramavat Portfolio",
     images: [
       {
-        url: "/profile.png",
-        width: 800,
-        height: 800,
-        alt: "Mit Ramavat - AI Engineer & Full Stack Developer",
+        url: "/mit-office.webp",
+        width: 1122,
+        height: 1402,
+        alt: "Mit Ramavat — AI / ML Engineer",
       },
     ],
     locale: "en_US",
@@ -59,10 +77,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mit Ramavat | AI Engineer & Full Stack Developer",
+    title: "Mit Ramavat | AI / ML Engineer",
     description:
-      "AI Engineer, Machine Learning Engineer, and Full Stack Developer building intelligent applications and modern web experiences.",
-    images: ["/profile.png"],
+      "AI/ML engineer building voice agents, machine learning systems and intelligent products.",
+    images: ["/mit-office.webp"],
   },
   verification: {
     google: "bY62PxN7Mis0EezurpyY8xC46ZDBIN_D01Yq_sSe2SI",
@@ -76,7 +94,7 @@ const jsonLd = {
       "@type": "Person",
       "@id": `${siteUrl}/#person`,
       name: "Mit Ramavat",
-      jobTitle: "AI Engineer & Full Stack Developer",
+      jobTitle: "AI / ML Engineer",
       description:
         "BCA Graduate specializing in Artificial Intelligence, Machine Learning, Deep Learning, FastAPI, Next.js and React.",
       url: siteUrl,
@@ -118,7 +136,7 @@ export default function RootLayout({
       lang="en"
       data-scroll-behavior="smooth"
       suppressHydrationWarning
-      className={cn("font-sans", geist.variable)}
+      className={cn(interTight.variable, instrumentSerif.variable, jetbrainsMono.variable, newsreader.variable)}
     >
       <head>
         <script
@@ -126,9 +144,14 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body suppressHydrationWarning className="overflow-x-hidden max-w-full">
-        <Providers>{children}</Providers>
-        <CursorTrail />
+      <body suppressHydrationWarning className="font-sans">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[110] focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-bg"
+        >
+          Skip to content
+        </a>
+        {children}
       </body>
     </html>
   );

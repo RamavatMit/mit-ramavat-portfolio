@@ -1,38 +1,32 @@
-
 export const timeline = [
-  
   {
     year: "2023",
-    title: "Started BCA Journey",
+    title: "Started BCA",
     description:
-      "Started Bachelor of Computer Applications and developed interest in programming, AI and software development.",
+      "Began a Bachelor of Computer Applications and fell for programming — first Python scripts, first web apps.",
   },
-
   {
     year: "2024",
-    title: "Explored AI & Machine Learning",
+    title: "Into AI & Machine Learning",
     description:
-      "Learned Python, Machine Learning, Deep Learning and worked on multiple AI projects.",
+      "Learned ML and deep learning, built recommendation, stock prediction and real-time object detection models.",
   },
-
   {
     year: "2025",
-    title: "Built Real Projects",
+    title: "Building real systems",
     description:
-      "Created AI applications, portfolio projects and improved full stack development skills.",
+      "Shipped LLM apps, forecasting and optimization projects; went full-stack with FastAPI and Next.js.",
   },
-
   {
     year: "2026",
-    title: "BCA Completed & Internship",
+    title: "BCA complete · Industry",
     description:
-      "Completed BCA and started working on real-world projects through internship experience.",
+      "Graduated and joined Spectrics Solution as an AI/ML Engineer Intern. Built Jarvis and an ML trading research platform.",
   },
-
   {
-    year: "Future",
+    year: "Next",
     title: "AI Engineer",
     description:
-      "Goal is to become a world-class AI Engineer building intelligent products and scalable AI systems.",
+      "Building intelligent products and scalable AI systems that people rely on every day.",
   },
 ];

@@ -1,12 +1,13 @@
 import { projects } from "@/data/projects";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ChevronLeft, ChevronRight, ExternalLink, Sparkles } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
-import Reveal from "@/components/Reveal";
-
 import type { Metadata } from "next";
+import Reveal from "@/components/motion/Reveal";
+import ProjectCover from "@/components/ProjectCover";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import SmoothScroll from "@/components/motion/SmoothScroll";
 
 type Props = {
   params: Promise<{
@@ -14,12 +15,16 @@ type Props = {
   }>;
 };
 
+const findIndex = (slug?: string) =>
+  projects.findIndex((p) => p.slug.toLowerCase() === slug?.toLowerCase());
+
+export function generateStaticParams() {
+  return projects.map((p) => ({ slug: p.slug }));
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const resolvedParams = await params;
-  const slug = resolvedParams?.slug;
-  const project = projects.find(
-    (p) => p.slug.toLowerCase() === slug?.toLowerCase()
-  );
+  const { slug } = await params;
+  const project = projects[findIndex(slug)];
 
   if (!project) {
     return {
@@ -29,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://mit-ramavat.vercel.app";
+    process.env.NEXT_PUBLIC_SITE_URL || "https://mit-ramavat-portfolio.vercel.app";
 
   return {
     title: project.title,
@@ -60,550 +65,203 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProjectPage({ params }: Props) {
-  const resolvedParams = await params;
-  const slug = resolvedParams?.slug;
-
-  const currentIndex = projects.findIndex(
-    (p) => p.slug.toLowerCase() === slug?.toLowerCase()
-  );
+  const { slug } = await params;
+  const currentIndex = findIndex(slug);
 
   if (currentIndex === -1) {
     notFound();
   }
 
   const project = projects[currentIndex];
-  const prevProject =
-    projects[(currentIndex - 1 + projects.length) % projects.length];
   const nextProject = projects[(currentIndex + 1) % projects.length];
 
+  const meta = [
+    { label: "Role", value: project.role },
+    { label: "Timeline", value: project.duration },
+    { label: "Status", value: project.status },
+    { label: "Year", value: project.year },
+  ].filter((m) => m.value);
+
   return (
-    <main className="min-h-screen bg-zinc-950 text-zinc-100 px-4 sm:px-6 lg:px-8 py-10 sm:py-16 lg:py-20 overflow-x-hidden">
-      <div className="max-w-5xl lg:max-w-6xl mx-auto space-y-12 sm:space-y-16">
-        {/* Back to Projects Button */}
-        <div>
-          <Link
-            href="/#projects"
-            className="
-              inline-flex
-              items-center
-              gap-2.5
-              px-4
-              py-2
-              sm:px-5
-              sm:py-2.5
-              rounded-full
-              bg-zinc-900/60
-              backdrop-blur-md
-              border
-              border-zinc-800/80
-              hover:border-amber-500/50
-              text-zinc-400
-              hover:text-amber-400
-              hover:bg-zinc-900/90
-              text-xs
-              sm:text-sm
-              font-medium
-              transition-all
-              duration-300
-              shadow-sm
-              group
-            "
-          >
-            <ArrowLeft className="w-4 h-4 text-amber-400 group-hover:-translate-x-1 transition-transform duration-300" />
-            Back to Projects
-          </Link>
-        </div>
-
-        {/* HERO BANNER */}
-        <Reveal>
-          <div
-            className="
-              relative
-              w-full
-              min-h-[280px]
-              sm:min-h-[460px]
-              h-[45vh]
-              sm:h-[55vh]
-              md:h-[65vh]
-              max-h-[650px]
-              rounded-3xl
-              sm:rounded-[36px]
-              overflow-hidden
-              border
-              border-zinc-800/80
-              hover:border-amber-500/30
-              transition-colors
-              duration-500
-              shadow-[0_20px_60px_rgba(0,0,0,0.6)]
-              group
-            "
-          >
-            {/* Background Image */}
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              priority
-              sizes="100vw"
-              className="
-                object-cover
-                transition-transform
-                duration-700
-                ease-out
-                group-hover:scale-105
-              "
-            />
-
-            {/* Dark Gradient Overlay */}
-            <div
-              className="
-                absolute
-                inset-0
-                bg-gradient-to-t
-                from-zinc-950
-                via-zinc-950/65
-                to-black/30
-                pointer-events-none
-              "
-            />
-
-            {/* Subtle Gold Ambient Glow */}
-            <div
-              className="
-                absolute
-                -bottom-24
-                left-1/2
-                -translate-x-1/2
-                w-[500px]
-                h-[250px]
-                sm:w-[650px]
-                sm:h-[300px]
-                rounded-full
-                bg-amber-500/10
-                blur-[130px]
-                pointer-events-none
-              "
-            />
-
-            {/* Banner Content */}
-            <div
-              className="
-                absolute
-                bottom-6
-                left-6
-                right-6
-                sm:bottom-10
-                sm:left-10
-                sm:right-10
-                md:bottom-12
-                md:left-12
-                md:right-12
-                z-10
-              "
+    <>
+      <SmoothScroll />
+      <Navbar />
+      <main id="main" className="paper-texture pt-24 sm:pt-32">
+        <div className="container-x">
+          <Reveal>
+            <Link
+              href="/#work"
+              className="group inline-flex items-center gap-2 label-mono text-muted transition-colors hover:text-ink"
             >
-              {project.category && (
-                <span className="inline-block uppercase tracking-[0.25em] text-amber-400 text-[11px] sm:text-xs font-semibold mb-3 px-3.5 py-1.5 rounded-full bg-zinc-950/80 backdrop-blur-md border border-amber-500/30 shadow-md">
-                  {project.category}
-                </span>
-              )}
+              <span className="transition-transform duration-500 group-hover:-translate-x-1">←</span>
+              Back to the book
+            </Link>
+          </Reveal>
 
-              <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-zinc-100 tracking-tight leading-[1.1] mt-1 drop-shadow-sm break-words">
+          <header className="mt-12 grid gap-10 md:grid-cols-12 md:items-end">
+            <div className="md:col-span-8">
+              <Reveal>
+                <p className="label-mono text-iridescent">
+                  {String(currentIndex + 1).padStart(2, "0")} — {project.category}
+                </p>
+              </Reveal>
+              <h1 className="mt-5 text-[clamp(2.8rem,8vw,8rem)] font-serif font-normal leading-[0.9] tracking-[-0.03em]">
                 {project.title}
               </h1>
-
-              <p
-                className="
-                  max-w-3xl
-                  mt-3
-                  sm:mt-4
-                  text-zinc-300
-                  text-sm
-                  sm:text-base
-                  md:text-lg
-                  leading-relaxed
-                  line-clamp-3
-                  sm:line-clamp-none
-                  font-normal
-                  drop-shadow
-                "
-              >
-                {project.description}
-              </p>
             </div>
-          </div>
-        </Reveal>
+            <Reveal delay={0.3} className="md:col-span-4">
+              <p className="text-[15px] leading-relaxed text-muted">{project.description}</p>
+            </Reveal>
+          </header>
 
-        {/* PROJECT STATS GRID */}
-        <Reveal>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
-            {/* Duration Card */}
-            <div className="relative overflow-hidden p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-md hover:border-amber-500/30 transition-all duration-300 before:absolute before:top-0 before:left-4 before:right-4 before:h-[2px] before:bg-gradient-to-r before:from-transparent before:via-amber-500/40 before:to-transparent">
-              <p className="text-zinc-500 text-xs sm:text-sm font-medium uppercase tracking-wider">Duration</p>
-              <h3 className="text-sm sm:text-base md:text-lg font-bold mt-1.5 text-zinc-200 break-words">
-                {project.duration || "N/A"}
-              </h3>
+          <Reveal delay={0.2} className="mt-14">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[28px] border border-line bg-surface sm:aspect-[16/8]">
+              <ProjectCover project={project} priority sizes="100vw" />
             </div>
+          </Reveal>
 
-            {/* Role Card */}
-            <div className="relative overflow-hidden p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-md hover:border-amber-500/30 transition-all duration-300 before:absolute before:top-0 before:left-4 before:right-4 before:h-[2px] before:bg-gradient-to-r before:from-transparent before:via-amber-500/40 before:to-transparent">
-              <p className="text-zinc-500 text-xs sm:text-sm font-medium uppercase tracking-wider">Role</p>
-              <h3 className="text-sm sm:text-base md:text-lg font-bold mt-1.5 text-zinc-200 break-words">
-                {project.role || "Developer"}
-              </h3>
-            </div>
+          <Reveal>
+            <dl className="mt-6 grid grid-cols-2 border-y border-line md:grid-cols-4">
+              {meta.map((m) => (
+                <div key={m.label} className="border-line py-6 pr-4 [&:not(:last-child)]:md:border-r md:px-6 md:first:pl-0">
+                  <dt className="label-mono text-dim">{m.label}</dt>
+                  <dd className="mt-2 text-lg font-medium tracking-tight">{m.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
 
-            {/* Category Card */}
-            <div className="relative overflow-hidden p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-md hover:border-amber-500/30 transition-all duration-300 before:absolute before:top-0 before:left-4 before:right-4 before:h-[2px] before:bg-gradient-to-r before:from-transparent before:via-amber-500/40 before:to-transparent">
-              <p className="text-zinc-500 text-xs sm:text-sm font-medium uppercase tracking-wider">Category</p>
-              <h3 className="text-sm sm:text-base md:text-lg font-bold mt-1.5 text-zinc-200 break-words">
-                {project.category || "Engineering"}
-              </h3>
-            </div>
-
-            {/* Status Card */}
-            <div className="relative overflow-hidden p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-md hover:border-amber-500/30 transition-all duration-300 before:absolute before:top-0 before:left-4 before:right-4 before:h-[2px] before:bg-gradient-to-r before:from-transparent before:via-amber-500/40 before:to-transparent">
-              <p className="text-zinc-500 text-xs sm:text-sm font-medium uppercase tracking-wider">Status</p>
-              <h3 className="text-sm sm:text-base md:text-lg font-bold mt-1.5 text-amber-400 flex items-center gap-2 break-words">
-                <span className="relative flex h-2.5 w-2.5 shrink-0">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400"></span>
-                </span>
-                {project.status || "Completed"}
-              </h3>
-            </div>
-          </div>
-        </Reveal>
-
-        {/* OVERVIEW SECTION */}
-        <Reveal>
-          <div className="border-t border-zinc-900/80 pt-10 sm:pt-14">
-            <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] text-amber-400">
-              Project Overview
-            </h2>
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-zinc-100 mt-1 mb-6 tracking-tight">
-              Detailed Breakdown
-            </h3>
-
-            <div className="p-6 sm:p-8 md:p-10 rounded-3xl bg-zinc-900/30 border border-zinc-800/70 backdrop-blur-sm shadow-inner">
-              <p className="text-zinc-300 text-base sm:text-lg leading-relaxed sm:leading-8 font-normal break-words">
+          {/* overview */}
+          <section className="grid gap-10 py-24 md:grid-cols-12 sm:py-32">
+            <Reveal className="md:col-span-4">
+              <p className="label-mono text-muted">(01) Overview</p>
+            </Reveal>
+            <Reveal className="md:col-span-8">
+              <p className="text-[clamp(1.35rem,2.4vw,2.1rem)] font-medium leading-[1.3] tracking-[-0.02em] text-ink/90">
                 {project.longDescription}
               </p>
-            </div>
-          </div>
-        </Reveal>
+            </Reveal>
+          </section>
 
-        {/* TECH STACK SECTION */}
-        <Reveal>
-          <div className="border-t border-zinc-900/80 pt-10 sm:pt-14">
-            <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] text-amber-400">
-              Technologies & Tools
-            </h2>
-            <h3 className="text-2xl sm:text-3xl font-bold text-zinc-100 mt-1 mb-6 tracking-tight">
-              Built With Modern Tech
-            </h3>
+          {/* metrics */}
+          {project.metrics && (
+            <section className="grid gap-10 border-t border-line py-24 md:grid-cols-12 sm:py-32">
+              <Reveal className="md:col-span-4">
+                <p className="label-mono text-muted">(02) By the numbers</p>
+              </Reveal>
+              <div className="md:col-span-8">
+                <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[24px] border border-line bg-line">
+                  {project.metrics.map((m, i) => (
+                    <Reveal key={m.label} delay={i * 0.08} className="bg-paper p-6 sm:p-8">
+                      <p className="text-3xl font-medium tracking-[-0.04em] sm:text-5xl">{m.value}</p>
+                      <p className="mt-3 label-mono text-muted">{m.label}</p>
+                    </Reveal>
+                  ))}
+                </div>
+                {project.note && (
+                  <Reveal>
+                    <p className="mt-5 flex gap-3 text-sm leading-relaxed text-muted">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-warm" />
+                      {project.note}
+                    </p>
+                  </Reveal>
+                )}
+              </div>
+            </section>
+          )}
 
-            <div className="flex flex-wrap gap-2.5 sm:gap-3.5">
-              {project.tech.map((tech) => (
-                <span
-                  key={tech}
-                  className="
-                    px-4
-                    py-2.5
-                    sm:px-5
-                    sm:py-3
-                    rounded-xl
-                    sm:rounded-2xl
-                    bg-zinc-900/80
-                    border
-                    border-zinc-800
-                    hover:border-amber-500/40
-                    hover:text-amber-300
-                    hover:bg-zinc-900
-                    hover:shadow-[0_4px_20px_rgba(245,158,11,0.1)]
-                    text-zinc-300
-                    text-xs
-                    sm:text-sm
-                    font-medium
-                    transition-all
-                    duration-300
-                    flex
-                    items-center
-                    gap-2
-                    group/tech
-                  "
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400/60 group-hover/tech:bg-amber-400 transition-colors" />
-                  {tech}
-                </span>
+          {/* features */}
+          <section className="grid gap-10 border-t border-line py-24 md:grid-cols-12 sm:py-32">
+            <Reveal className="md:col-span-4">
+              <p className="label-mono text-muted">({project.metrics ? "03" : "02"}) What it does</p>
+            </Reveal>
+            <ol className="md:col-span-8">
+              {project.features.map((f, i) => (
+                <li key={f} className="border-b border-line first:border-t">
+                  <Reveal className="flex items-baseline gap-6 py-5">
+                    <span className="font-mono text-xs text-dim">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="text-lg tracking-tight text-ink/90 sm:text-xl">{f}</span>
+                  </Reveal>
+                </li>
               ))}
-            </div>
-          </div>
-        </Reveal>
+            </ol>
+          </section>
 
-        {/* KEY FEATURES SECTION */}
-        {project.features && project.features.length > 0 && (
-          <Reveal>
-            <div className="border-t border-zinc-900/80 pt-10 sm:pt-14">
-              <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] text-amber-400">
-                Capabilities
-              </h2>
-              <h3 className="text-2xl sm:text-3xl font-bold text-zinc-100 mt-1 mb-8 tracking-tight">
-                Key Features & Functionality
-              </h3>
+          {/* challenge & learning */}
+          <section className="grid gap-6 border-t border-line py-24 md:grid-cols-2 sm:py-32">
+            {[
+              { k: "The hard part", v: project.challenge },
+              { k: "What I learned", v: project.learning },
+            ].map((b, i) => (
+              <Reveal key={b.k} delay={i * 0.1}>
+                <article className="h-full rounded-[24px] border border-line bg-surface p-6 sm:p-10">
+                  <p className="label-mono text-iridescent">{b.k}</p>
+                  <p className="mt-6 text-[15px] leading-relaxed text-muted sm:text-base">{b.v}</p>
+                </article>
+              </Reveal>
+            ))}
+          </section>
 
-              <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
-                {project.features.map((feature) => (
-                  <div
-                    key={feature}
-                    className="
-                      p-5
-                      sm:p-6
-                      rounded-2xl
-                      sm:rounded-3xl
-                      border
-                      border-zinc-800/80
-                      bg-zinc-900/40
-                      backdrop-blur-md
-                      hover:border-amber-500/40
-                      hover:bg-zinc-900/70
-                      hover:-translate-y-1
-                      transition-all
-                      duration-300
-                      flex
-                      items-start
-                      gap-4
-                      shadow-sm
-                      group/feature
-                    "
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/20 group-hover/feature:border-amber-500/40 group-hover/feature:bg-amber-500/20 transition-colors">
-                      <Sparkles className="w-5 h-5" />
-                    </div>
-                    <span className="text-zinc-200 text-sm sm:text-base leading-relaxed font-medium break-words mt-1">
-                      {feature}
-                    </span>
-                  </div>
+          {/* stack + links */}
+          <section className="grid gap-10 border-t border-line py-16 md:grid-cols-12">
+            <Reveal className="md:col-span-4">
+              <p className="label-mono text-muted">Built with</p>
+            </Reveal>
+            <Reveal className="flex flex-col gap-10 md:col-span-8">
+              <ul className="flex flex-wrap gap-2">
+                {project.tech.map((t) => (
+                  <li key={t} className="rounded-full border border-line px-4 py-2 font-mono text-xs text-ink/80">
+                    {t}
+                  </li>
                 ))}
-              </div>
-            </div>
-          </Reveal>
-        )}
-
-        {/* CHALLENGES & LEARNINGS SECTION */}
-        {(project.challenge || project.learning) && (
-          <Reveal>
-            <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 border-t border-zinc-900/80 pt-10 sm:pt-14">
-              {project.challenge && (
-                <div
-                  className="
-                    p-6
-                    sm:p-8
-                    rounded-3xl
-                    border
-                    border-zinc-800/80
-                    bg-zinc-900/40
-                    backdrop-blur-md
-                    hover:border-amber-500/30
-                    transition-all
-                    duration-300
-                    relative
-                    overflow-hidden
-                  "
-                >
-                  <span className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-400">
-                    Obstacles
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-bold text-zinc-100 mt-2 mb-4">
-                    Engineering Challenges
-                  </h3>
-                  <p className="text-zinc-300 text-sm sm:text-base leading-relaxed font-normal break-words">
-                    {project.challenge}
-                  </p>
+              </ul>
+              {(project.github || project.demo) && (
+                <div className="flex flex-wrap gap-3">
+                  {project.github && (
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3.5 text-sm font-medium text-paper"
+                    >
+                      <FaGithub /> View source
+                    </a>
+                  )}
+                  {project.demo && (
+                    <a
+                      href={project.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full border border-line-strong px-6 py-3.5 text-sm font-medium transition-colors hover:border-ink"
+                    >
+                      Live site ↗
+                    </a>
+                  )}
                 </div>
               )}
+            </Reveal>
+          </section>
+        </div>
 
-              {project.learning && (
-                <div
-                  className="
-                    p-6
-                    sm:p-8
-                    rounded-3xl
-                    border
-                    border-zinc-800/80
-                    bg-zinc-900/40
-                    backdrop-blur-md
-                    hover:border-amber-500/30
-                    transition-all
-                    duration-300
-                    relative
-                    overflow-hidden
-                  "
-                >
-                  <span className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-400">
-                    Insights
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-bold text-zinc-100 mt-2 mb-4">
-                    Key Learnings
-                  </h3>
-                  <p className="text-zinc-300 text-sm sm:text-base leading-relaxed font-normal break-words">
-                    {project.learning}
-                  </p>
-                </div>
-              )}
-            </div>
-          </Reveal>
-        )}
-
-        {/* EXTERNAL ACTION BUTTONS */}
-        {(project.github || project.demo) && (
-          <Reveal>
-            <div className="flex flex-wrap gap-4 border-t border-zinc-900/80 pt-10 sm:pt-12">
-              {project.github && (
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="
-                    w-full
-                    sm:w-auto
-                    inline-flex
-                    items-center
-                    justify-center
-                    gap-2.5
-                    px-6
-                    py-3.5
-                    rounded-xl
-                    sm:rounded-2xl
-                    border
-                    border-zinc-700/80
-                    hover:border-amber-500/60
-                    bg-zinc-900/90
-                    hover:bg-zinc-900
-                    text-zinc-100
-                    hover:text-amber-300
-                    font-semibold
-                    text-sm
-                    transition-all
-                    duration-300
-                    shadow-md
-                    hover:-translate-y-0.5
-                    active:translate-y-0
-                  "
-                >
-                  <FaGithub size={18} />
-                  View Source Code
-                </a>
-              )}
-
-              {project.demo && (
-                <a
-                  href={project.demo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="
-                    inline-flex
-                    items-center
-                    justify-center
-                    gap-2.5
-                    px-6
-                    py-3.5
-                    rounded-xl
-                    sm:rounded-2xl
-                    bg-amber-500
-                    hover:bg-amber-400
-                    text-zinc-950
-                    font-bold
-                    text-sm
-                    transition-all
-                    duration-300
-                    shadow-[0_0_20px_rgba(245,158,11,0.25)]
-                    hover:shadow-[0_0_30px_rgba(245,158,11,0.4)]
-                    hover:-translate-y-0.5
-                    active:translate-y-0
-                  "
-                >
-                  <ExternalLink size={18} />
-                  Live Demo
-                </a>
-              )}
-            </div>
-          </Reveal>
-        )}
-
-        {/* NEXT / PREVIOUS PROJECT NAVIGATION */}
-        <Reveal>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 border-t border-zinc-900/80 pt-10 sm:pt-14">
-            <Link
-              href={`/projects/${prevProject.slug}`}
-              className="
-                group
-                p-5
-                sm:p-6
-                rounded-2xl
-                sm:rounded-3xl
-                border
-                border-zinc-800/80
-                bg-zinc-900/40
-                backdrop-blur-md
-                hover:border-amber-500/40
-                transition-all
-                duration-300
-                flex
-                items-center
-                gap-4
-              "
-            >
-              <div className="w-10 h-10 rounded-xl bg-zinc-800/80 text-amber-400 flex items-center justify-center shrink-0 border border-zinc-700/50 group-hover:border-amber-500/40 group-hover:bg-amber-500/10 transition-all">
-                <ChevronLeft size={20} className="group-hover:-translate-x-0.5 transition-transform" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-xs font-semibold text-amber-500/90 uppercase tracking-widest">
-                  Previous Project
-                </p>
-                <h4 className="text-base sm:text-lg font-bold text-zinc-200 group-hover:text-amber-400 transition-colors truncate">
-                  {prevProject.title}
-                </h4>
-              </div>
-            </Link>
-
-            <Link
-              href={`/projects/${nextProject.slug}`}
-              className="
-                group
-                p-5
-                sm:p-6
-                rounded-2xl
-                sm:rounded-3xl
-                border
-                border-zinc-800/80
-                bg-zinc-900/40
-                backdrop-blur-md
-                hover:border-amber-500/40
-                transition-all
-                duration-300
-                flex
-                items-center
-                justify-between
-                sm:justify-end
-                gap-4
-                text-right
-              "
-            >
-              <div className="min-w-0">
-                <p className="text-xs font-semibold text-amber-500/90 uppercase tracking-widest">
-                  Next Project
-                </p>
-                <h4 className="text-base sm:text-lg font-bold text-zinc-200 group-hover:text-amber-400 transition-colors truncate">
-                  {nextProject.title}
-                </h4>
-              </div>
-              <div className="w-10 h-10 rounded-xl bg-zinc-800/80 text-amber-400 flex items-center justify-center shrink-0 border border-zinc-700/50 group-hover:border-amber-500/40 group-hover:bg-amber-500/10 transition-all">
-                <ChevronRight size={20} className="group-hover:translate-x-0.5 transition-transform" />
-              </div>
-            </Link>
+        {/* next project */}
+        <Link
+          href={`/projects/${nextProject.slug}`}
+         
+          className="group relative mt-10 block overflow-hidden border-t border-line"
+        >
+          <div className="container-x flex flex-col gap-4 py-20 sm:py-28">
+            <p className="label-mono text-muted">Next project</p>
+            <p className="text-[clamp(2.6rem,8vw,8rem)] font-medium leading-[0.9] tracking-[-0.055em] transition-transform duration-700 ease-out-expo group-hover:translate-x-4">
+              {nextProject.title}
+              <span className="ml-4 inline-block font-serif italic font-normal text-iridescent transition-transform duration-700 group-hover:translate-x-3">
+                →
+              </span>
+            </p>
           </div>
-        </Reveal>
-      </div>
-    </main>
+          <div className="absolute inset-0 -z-10 origin-bottom scale-y-0 bg-surface transition-transform duration-700 ease-out-expo group-hover:scale-y-100" />
+        </Link>
+      </main>
+      <Footer />
+    </>
   );
 }
